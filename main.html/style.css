@@ -1,0 +1,292 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #ffe4e1;
+    color: #4a4a4a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow-x: hidden;
+    text-align: center;
+}
+
+.screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 20px;
+    position: absolute;
+    min-height: 100vh;
+}
+
+.screen.active {
+    display: flex;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+#screen-welcome {
+    cursor: pointer;
+}
+
+h1 {
+    font-size: 2.2rem;
+    color: #ff6b8b;
+    margin-bottom: 20px;
+}
+
+.tap-hint {
+    font-size: 0.9rem;
+    color: #a1a1a1;
+    animation: blink 1.5s infinite;
+}
+
+h2 {
+    font-size: 1.6rem;
+    color: #d81b60;
+    margin-bottom: 30px;
+}
+
+/* Тортик */
+.cake-container {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin-top: 50px;
+}
+
+.cake-bottom {
+    position: absolute;
+    bottom: 0;
+    width: 150px;
+    height: 60px;
+    background: #f48fb1;
+    border-radius: 10px 10px 0 0;
+    pointer-events: none;
+}
+
+.cake-top {
+    position: absolute;
+    bottom: 60px;
+    left: 15px;
+    width: 120px;
+    height: 50px;
+    background: #f06292;
+    border-radius: 10px 10px 0 0;
+    pointer-events: none;
+}
+
+.candle {
+    position: absolute;
+    bottom: 110px;
+    left: 70px;
+    width: 10px;
+    height: 35px;
+    background: #fff;
+    border-radius: 3px;
+    pointer-events: none;
+}
+
+.flame {
+    position: absolute;
+    bottom: 145px;
+    left: 68px;
+    width: 14px;
+    height: 20px;
+    background: #ffb74d;
+    border-radius: 50% 50% 20% 20%;
+    box-shadow: 0 0 10px #ffb74d;
+    animation: flicker 0.6s infinite alternate;
+    cursor: pointer;
+    z-index: 10;
+}
+
+/* Кнопки */
+.gift-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 80%;
+    max-width: 300px;
+    margin-top: 20px;
+}
+
+.gift-btn {
+    background: white;
+    border: 2px solid #ff8da1;
+    padding: 15px;
+    font-size: 1.2rem;
+    border-radius: 25px;
+    color: #d81b60;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    transition: transform 0.2s;
+}
+
+.gift-btn:active {
+    transform: scale(0.95);
+}
+
+.icon {
+    font-size: 1.5rem;
+}
+
+.sub-screen {
+    background-color: #fff0f2;
+    justify-content: flex-start;
+    padding-top: 40px;
+    overflow-y: auto;
+}
+
+.content-box {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    width: 90%;
+    max-width: 350px;
+    margin-bottom: 30px;
+}
+
+.letter-text {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    text-align: left;
+    white-space: pre-line;
+}
+
+.video-container iframe {
+    width: 90vw;
+    height: calc(90vw * 0.5625);
+    max-width: 350px;
+    max-height: 200px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+.photo-gallery {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 90%;
+    max-width: 350px;
+    margin-bottom: 30px;
+}
+
+.photo-gallery img {
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.back-btn {
+    background: #ff6b8b;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-bottom: 40px;
+}
+
+/* Стилі баночки */
+.jar-hint {
+    font-size: 0.9rem;
+    color: #888;
+    margin-bottom: 20px;
+}
+
+.jar-container {
+    width: 120px;
+    height: 160px;
+    position: relative;
+    margin: 20px auto;
+    cursor: pointer;
+}
+
+.jar-container.shake {
+    animation: jarShake 0.4s ease-in-out;
+}
+
+.jar-lid {
+    width: 80px;
+    height: 20px;
+    background: #d81b60;
+    border-radius: 5px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+}
+
+.jar-body {
+    width: 110px;
+    height: 140px;
+    background: rgba(255, 255, 255, 0.6);
+    border: 4px solid #ff8da1;
+    border-radius: 20px 20px 30px 30px;
+    margin: -5px auto 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.heart-icon {
+    font-size: 2.5rem;
+    color: #ff6b8b;
+    animation: pulse 2s infinite;
+}
+
+.wish-box {
+    background: white;
+    border-left: 5px solid #ff6b8b;
+    padding: 15px 20px;
+    border-radius: 10px;
+    width: 85%;
+    max-width: 320px;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    color: #4a4a4a;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    margin: 30px auto;
+}
+
+/* Анімації */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+@keyframes flicker {
+    from { transform: scale(1); }
+    to { transform: scale(1.1) rotate(2deg); }
+}
+@keyframes jarShake {
+    0% { transform: rotate(0deg); }
+    20% { transform: rotate(-8deg); }
+    40% { transform: rotate(7deg); }
+    60% { transform: rotate(-5deg); }
+    80% { transform: rotate(3deg); }
+    100% { transform: rotate(0deg); }
+}
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}

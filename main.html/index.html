@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday!</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ЕКРАН 1: Привітання (Натисни, щоб увійти) -->
+    <div id="screen-welcome" class="screen active">
+        <h1 class="fade-in">Happy birthday my love ❤️</h1>
+        <p class="tap-hint">Натисни на екран, щоб пройти далі...</p>
+    </div>
+
+    <!-- ЕКРАН 2: Тортик зі свічкою -->
+    <div id="screen-cake" class="screen">
+        <h2 id="cake-instruction">Задуй свічку і загадай бажання ✨</h2>
+        <div class="cake-container">
+            <!-- Вогник свічки (натискання на нього "задуває" її) -->
+            <div id="flame" class="flame"></div>
+            <div class="candle"></div>
+            <div class="cake-top"></div>
+            <div class="cake-bottom"></div>
+        </div>
+    </div>
+
+    <!-- ЕКРАН 3: Головне меню подарунків -->
+    <div id="screen-gifts" class="screen">
+        <h2>Молодчинка! Тепер невеличкі подаруночки для тебе 🎁</h2>
+        <div class="gift-buttons">
+            <button class="gift-btn" onclick="openSubScreen('screen-letter')">
+                <span class="icon">✉️</span> Лист
+            </button>
+            <button class="gift-btn" onclick="openSubScreen('screen-video')">
+                <span class="icon">🎬</span> Відео
+            </button>
+            <button class="gift-btn" onclick="openSubScreen('screen-photos')">
+                <span class="icon">📸</span> Фото
+            </button>
+            <button class="gift-btn" onclick="openSubScreen('screen-jar')">
+                <span class="icon">🍯</span> Баночка
+            </button>
+        </div>
+    </div>
+
+    <!-- ПІД-ЕКРАН: Лист -->
+    <div id="screen-letter" class="screen sub-screen">
+        <div class="content-box">
+            <h2>Лист для моєї коханої дівчинки</h2>
+            <p class="letter-text">
+                Моїй коханій
+                Насправді я вже навіть не знаю чим можу тебе здивувати, але все одно з кожним разом мені хочеться робити це все сильніше. 
+                Одразу хочу тебе привітати з 20 річчям (нормально так вимахала), і побажати тобі щоб ти завжди була такою світлою та чудовою людиною.
+                Я знаю що ти нажаль пережила в своєму житті багато трудношів, і мені хотілось би щоб наразі тобі на шляху посміхалась вдача,зустрічались прекрасні люди та поряд були вірні друзі. Кожне бажання було для тебе не чимось не здійсненним а як маленька або велика ціль яку ти досягнеш. 
+                Ну а я буду поряд з тобою, і допомагатиму тобі цього досягати. Я тебе безмежно кохаю і ти найкраща дівчина в цьому світі.
+                Якщо б я могла то повір я б здійснила кожну з твоїх мрій і я буду над цим працювати. 
+                З усією любовю ta autre moitié.
+            </p>
+        </div>
+        <button class="back-btn" onclick="backToGifts()">Повернутись до подарунків</button>
+    </div>
+
+    <!-- ПІД-ЕКРАН: Відео -->
+    <div id="screen-video" class="screen sub-screen">
+        <h2>Ця пісня в мене асоціюється з тобою 🎵</h2>
+        <div class="video-container">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/NdYWuo9OFAw?si=IEeHwR_gp2Dopv52" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <button class="back-btn" onclick="backToGifts()">Повернутись до подарунків</button>
+    </div>
+
+    <!-- ПІД-ЕКРАН: Фото -->
+    <div id="screen-photos" class="screen sub-screen">
+        <h2>Найпрекрасніша дівчина в світі 🤍</h2>
+        <div class="photo-gallery">
+            <img src="photo_2026-07-11_23-16-12.jpg" alt="Фото 1">
+            <img src="photo_2026-07-13_09-21-39.jpg" alt="Фото 2">
+            <img src="photo_2026-07-11_23-16-26.jpg" alt="Фото 3">
+            <img src="photo_2026-07-11_23-16-32.jpg" alt="Фото 4">
+        </div>
+        <button class="back-btn" onclick="backToGifts()">Повернутись до подарунків</button>
+    </div>
+
+    <!-- ПІД-ЕКРАН: Баночка -->
+    <div id="screen-jar" class="screen sub-screen">
+        <h2>Банка побажань 🍯</h2>
+        <p class="jar-hint">Натисни на баночку, щоб дістати записку...</p>
+        
+        <!-- Сама баночка, на яку можна клікати -->
+        <div id="wish-jar" class="jar-container" onclick="getWish()">
+            <div class="jar-lid"></div>
+            <div class="jar-body">
+                <div class="heart-icon">❤️</div>
+            </div>
+        </div>
+
+        <!-- Поле, де буде з'являтися текст записки -->
+        <div id="wish-output" class="wish-box">Натисни на баночку! ✨</div>
+
+        <button class="back-btn" onclick="backToGifts()">Повернутись до подарунків</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
