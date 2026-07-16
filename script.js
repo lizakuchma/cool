@@ -1,7 +1,7 @@
 let audioContext;
 let analyser;
 let microphone;
-let javascriptNode;
+let meter;
 let candleBlownOut = false; // Прапорець, щоб не задувати кілька разів
 
 // 1. ПЕРЕХІД З ПЕРШОГО ЕКРАНУ ДО ТОРТИКА + ЗАПУСК МІКРОФОНА
@@ -10,6 +10,52 @@ document.getElementById('screen-welcome').addEventListener('click', function() {
     startMicDetection(); // Запускаємо магію мікрофона відразу після першого тапу
 });
 
+// Допоміжна функція для створення вимірювача гучності (Audio Meter)
+function createAudioMeter(audioContext, clipLevel, averaging, alpha) {
+    const processor = audioContext.createScriptProcessor(512);
+    processor.onaudioprocess = volumeAudioProcess;
+    processor.clipping = false;
+    processor.lastClip = 0;
+    processor.volume = 0;
+    processor.clipLevel = clipLevel || 0.98;
+    processor.averaging = averaging || 0.95;
+    processor.clipLag = 200;
+
+    processor.connect(audioContext.destination);
+
+    processor.checkClipping = function() {
+        if (!this.clipping) return false;
+        if ((this.lastClip + this.clipLag) < window.performance.now()) this.clipping = false;
+        return this.clipping;
+    };
+
+    processor.shutdown = function() {
+        this.disconnect();
+        this.onaudioprocess = null;
+    };
+
+    return processor;
+}
+
+function volumeAudioProcess(event) {
+    const buf = event.inputBuffer.getChannelData(0);
+    const bufLength = buf.length;
+    let sum = 0;
+    let x;
+
+    for (let i = 0; i < bufLength; i++) {
+        x = buf[i];
+        if (Math.abs(x) >= this.clipLevel) {
+            this.clipping = true;
+            this.lastClip = window.performance.now();
+        }
+        sum += x * x;
+    }
+
+    const rms = Math.sqrt(sum / bufLength);
+    this.volume = Math.max(rms, this.volume * this.averaging);
+}
+
 // 2. АЛГОРИТМ ВИЗНАЧЕННЯ ПОДИХУ
 async function startMicDetection() {
     try {
@@ -17,45 +63,31 @@ async function startMicDetection() {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        analyser = audioContext.createAnalyser();
         microphone = audioContext.createMediaStreamSource(stream);
+        meter = createAudioMeter(audioContext);
         
-        analyser.fftSize = 512;
-        microphone.connect(analyser);
+        // Створюємо фільтр низьких частот для відсікання зайвих звуків
+        const filter = audioContext.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = 400; // Пропускає тільки частоти подиху
+        
+        microphone.connect(filter);
+        filter.connect(meter);
 
-        const dataArray = new Uint8Array(analyser.frequencyBinCount);
+        let lowpass = 0;
+        const ALPHA = 0.5;
+        const THRESHOLD = 0.08; // Поріг чутливості (можна трохи зменшити/збільшити)
 
         function detectBlow() {
             if (candleBlownOut) return; // Якщо свічку вже задули — зупиняємо цикл
 
-            analyser.getByteFrequencyData(dataArray);
+            // Розрахунок згладженого рівня гучності через фільтр
+            lowpass = ALPHA * meter.volume + (1.0 - ALPHA) * lowpass;
 
-            let highFreqSum = 0;
-            let lowFreqSum = 0;
-            const midpoint = dataArray.length / 2;
-
-            // Ділимо частоти на низькі та високі
-            for (let i = 0; i < dataArray.length; i++) {
-                if (i < midpoint) {
-                    lowFreqSum += dataArray[i];
-                } else {
-                    highFreqSum += dataArray[i];
-                }
-            }
-
-            const highAvg = highFreqSum / (dataArray.length / 2);
-            const lowAvg = lowFreqSum / (dataArray.length / 2);
-
-            // Вираховуємо коефіцієнт шуму подиху
-            const ratio = highAvg / (lowAvg + 1);
-
-            // ПОРІГ ЧУТЛИВОСТІ ПОДИХУ
-            const BLOW_RATIO_THRESHOLD = 0.5;
-
-            // Якщо дмухнули — гасимо свічку
-            if (ratio > BLOW_RATIO_THRESHOLD) {
+            // Якщо рівень шуму вище порогу — задуваємо свічку!
+            if (lowpass > THRESHOLD) {
                 blowOutCandle();
-                return; // Виходимо з функції анімації
+                return;
             }
 
             // Запускаємо перевірку знову на наступному кадрі
@@ -66,7 +98,8 @@ async function startMicDetection() {
 
     } catch (err) {
         console.error("Помилка доступу до мікрофона:", err);
-        // Резервний варіант: якщо мікрофон заблоковано, даємо можливість задути кліком по вогнику
+        // Резервний варіант: якщо мікрофон заблоковано або виникла помилка,
+        // даємо можливість задути кліком по вогнику
         document.getElementById('flame').addEventListener('click', blowOutCandle);
     }
 }
@@ -144,7 +177,7 @@ const wishes = [
     "Ти надзвичайно талановита й особлива. 💘",
     "Обожнюю твої обійми — вони найтепліші. 💝",
     "Я завжди буду твоєю надійною опорою. 😍",
-    "Кожного дня я закохуюсь в тебе все сильніше 🥰",
+    "Кожну мить я закохуюсь в тебе все сильніше 🥰",
     "Кожен твій поцілунок як найкраща винагорода 😇"
 ];
 
